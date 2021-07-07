@@ -1,0 +1,48 @@
+<p>Listado alumnos</p>
+
+<button [routerLink]='["/alumno-nuevo"]' class="btn btn-primary">
+    Crear Alumno
+</button>
+<div class="row">
+    <input class="form-control" [placeholder]="mensajeingreso" [(ngModel)]="campobuscado" name="campobuscado"/>
+    <button (click)="BuscarAlumno()" class="btn btn-success">Buscar</button>
+</div>
+<p *ngIf="!(ListadoAlumnos.length>0)">No hay datos en la lista de alumnos</p>
+
+<table class="table table-striped" *ngIf="ListadoAlumnos.length>0">
+    <thead class="thead-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Pais</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let alumno of ListadoAlumnos">
+            <td>{{alumno.nombre | uppercase}}</td>
+            <td>{{alumno.apellido | lowercase}}</td>
+            <td>{{alumno.fecha | date:'shortDate'}}</td>
+            <td [ngSwitch]="alumno.estado">
+                <span *ngSwitchCase="'reprobado'" class="badge badge-danger"  >REPROBADO</span>
+                <span *ngSwitchCase="'cursando'"  class="badge badge-warning" >CURSANDO </span>
+                <span *ngSwitchCase="'aprobado'"  class="badge badge-primary" >APROBADO </span>
+            </td>
+            <td >
+                <span 
+                [ngClass]="alumno.pais.descripcion ==='Brasil' ? 'badge badge-danger':'badge badge-warning' "
+                [ngStyle]="{'font-style': alumno.pais.descripcion ==='Argentina' ? 'italic':'normal' }">
+                    {{alumno.pais.descripcion}}
+                </span>
+                 
+            </td>
+            <td>
+                <button class="btn btn-danger" (click)="Borrar(alumno.id)" >Borrar</button>
+                <button class="btn btn-warning" (click)="verificarSiEstaActivo(alumno.id)">Esta activo?</button>
+                <button class="btn btn-primary" [routerLink]='["/alumno-editar/" + alumno.id]'>Editar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
